@@ -6,6 +6,7 @@ import (
 
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/handlers"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/repository/adapter"
+	HttpStatus "github.com/brandonspitz/Go-DynamoDB-API/utils/http"
 )
 
 type Handler struct {
@@ -40,5 +41,5 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Options(w http.ResponseWriter, r *http.Request) {
-	HttpStatus.StatusNotContent(w, r)
+	HttpStatus.StatusNoContent(w, r)
 }

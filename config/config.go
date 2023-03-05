@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	Part        int
+	Port        int
 	Timeout     int
 	Dialect     string
 	DatabaseURI string

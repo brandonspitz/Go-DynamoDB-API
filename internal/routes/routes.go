@@ -1,8 +1,10 @@
 package routes
 
 import (
-	ProductHandler "github.com/brandonspitz/Go-DynamoDB-API/config/handlers/product"
+	ServerConfig "github.com/brandonspitz/Go-DynamoDB-API/config"
 	HealthHandler "github.com/brandonspitz/Go-DynamoDB-API/internal/handlers/health"
+	ProductHandler "github.com/brandonspitz/Go-DynamoDB-API/internal/handlers/product"
+	"github.com/brandonspitz/Go-DynamoDB-API/internal/repository/adapter"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
@@ -14,7 +16,7 @@ type Router struct {
 
 func NewRouter() *Router {
 	return &Router{
-		config: NewConfig().SetTimeout(serviceConfig.GetConfig().Timeout),
+		config: NewConfig().SetTimeout(ServerConfig.GetConfig().Timeout),
 		router: chi.NewRouter(),
 	}
 }
@@ -50,12 +52,12 @@ func (r *Router) RouterHealth(repository adapter.Interface) {
 
 func (r *Router) RouterProduct(repository adapter.Interface) {
 	handler := ProductHandler.NewHandler(repository)
-	r.router.Route("/product", func(router chi.Router) {
+	r.router.Route("/product", func(route chi.Router) {
 		route.Post("/", handler.Post)
-		router.Get("/", handler.Get)
-		router.Put("/{ID}", handler.Put)
-		router.Delete("/{ID}", handler.Delete)
-		router.Options("/", handler.Options)
+		route.Get("/", handler.Get)
+		route.Put("/{ID}", handler.Put)
+		route.Delete("/{ID}", handler.Delete)
+		route.Options("/", handler.Options)
 	})
 }
 

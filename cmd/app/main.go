@@ -6,15 +6,17 @@ import (
 	"net/http"
 
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/brandonspitz/Go-DynamoDB-API/config"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/repository/adapter"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/repository/instance"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/routes"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/rules"
+	RulesProduct "github.com/brandonspitz/Go-DynamoDB-API/internal/rules/product"
 	"github.com/brandonspitz/Go-DynamoDB-API/utils/logger"
 )
 
 func main() {
-	configs := Config.GetConfig()
+	configs := config.GetConfig()
 	connection := instance.GetConnection()
 	repository := adapter.NewAdapter(connection)
 
@@ -51,7 +53,7 @@ func callMigrateAndAppendError(errors *[]error, connection *dynamodb.DynamoDB, r
 }
 
 func checkTables(connection *dynamodb.DynamoDB) error {
-	response, err := connection.ListTables(&dynamodb.ListTables(&dynamodb.ListTablesInput{}))
+	response, err := connection.ListTables(&dynamodb.ListTablesInput{})
 
 	if response != nil {
 		if len(response.TableNames) == 0 {

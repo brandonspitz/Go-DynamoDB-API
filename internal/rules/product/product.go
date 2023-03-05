@@ -87,7 +87,7 @@ func (r *Rules) createTable(connection *dynamodb.DynamoDB) error {
 	}
 	if response != nil && strings.Contains(response.GoString(), "TableStatus:\"CREATING\"") {
 		time.Sleep(3 * time.Second)
-		err = r.CreateTable(connection)
+		err = r.createTable(connection)
 		if err != nil {
 			return err
 		}

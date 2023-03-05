@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/brandonspitz/Go-DynamoDB-API/internal/controllers/product"
+	product "github.com/brandonspitz/Go-DynamoDB-API/internal/controllers"
 	EntityProduct "github.com/brandonspitz/Go-DynamoDB-API/internal/entities/product"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/handlers"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/repository/adapter"
@@ -17,7 +17,8 @@ import (
 )
 
 type Handler struct {
-	handler.Interface
+	handlers.Interface
+
 	Controller product.Interface
 	Rules      Rules.Interface
 }
@@ -132,7 +133,7 @@ func (h *Handler) getBodyAndValidate(r *http.Request, ID uuid.UUID) (*EntityProd
 	}
 
 	setDefaultValues(productParsed, ID)
-	return productParsed, h.Rule.Validate(productParsed)
+	return productParsed, h.Rules.Validate(productParsed)
 }
 
 func setDefaultValues(product *EntityProduct.Product, ID uuid.UUID) {

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
-	"github.com/brandonspitz/Go-DynamoDB-API/internal/handlers/product"
+	"github.com/brandonspitz/Go-DynamoDB-API/internal/entities/product"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/repository/adapter"
 	"github.com/google/uuid"
 )
@@ -39,7 +39,7 @@ func (c *Controller) ListOne(id uuid.UUID) (entity product.Product, err error) {
 func (c *Controller) ListAll() (entities []product.Product, err error) {
 	entities = []product.Product{}
 	var entity product.Product
-	
+
 	filter := expression.Name("name").NotEqual(expression.Value(""))
 
 	condition, err := expression.NewBuilder().WithFilter(filter).Build()
@@ -53,7 +53,7 @@ func (c *Controller) ListAll() (entities []product.Product, err error) {
 	}
 
 	if response != nil {
-		for _, value : range response.Items {
+		for _, value := range response.Items {
 			entity, err := product.ParseDynamoAttributeToStruct(value)
 			if err != nil {
 				return entities, err
@@ -67,11 +67,11 @@ func (c *Controller) ListAll() (entities []product.Product, err error) {
 
 func (c *Controller) Create(entity *product.Product) (uuid.UUID, error) {
 	entity.CreatedAt = time.Now()
-	c.repository.CreateOrUpdate(entity.GetMap(), entity.TableName())
+	_, err := c.repository.CreateOrUpdate(entity.GetMap(), entity.TableName())
 	return entity.ID, err
 }
 
-func (c *Controller) Update(id uuid.UUID, entity *product.Product) {
+func (c *Controller) Update(id uuid.UUID, entity *product.Product) error {
 	found, err := c.ListOne(id)
 	if err != nil {
 		return err
@@ -79,7 +79,7 @@ func (c *Controller) Update(id uuid.UUID, entity *product.Product) {
 
 	found.ID = id
 	found.Name = entity.Name
-	found.UpdateAt = time.Now()
+	found.UpdatedAt = time.Now()
 
 	_, err = c.repository.CreateOrUpdate(found.GetMap(), entity.TableName())
 	return err
