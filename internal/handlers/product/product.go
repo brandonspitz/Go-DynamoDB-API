@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	//importing packages from other folders
 	product "github.com/brandonspitz/Go-DynamoDB-API/internal/controllers"
 	EntityProduct "github.com/brandonspitz/Go-DynamoDB-API/internal/entities/product"
 	"github.com/brandonspitz/Go-DynamoDB-API/internal/handlers"
@@ -16,14 +17,14 @@ import (
 	"github.com/google/uuid"
 )
 
-type Handler struct {
+type Handler struct { //creating handler with product and Rules
 	handlers.Interface
 
 	Controller product.Interface
 	Rules      Rules.Interface
 }
 
-func NewHandler(repository adapter.Interface) handlers.Interface {
+func NewHandler(repository adapter.Interface) handlers.Interface { //create handler function
 	return &Handler{
 		Controller: product.NewController(repository),
 		Rules:      RulesProduct.NewRules(),
